@@ -40,6 +40,8 @@ private:
 	boolean Status (void);
 	boolean Show (void);
 	boolean SetSpeed (void);
+	boolean NTP (void);
+	boolean Syslog (void);
 	boolean Sleep (void);
 	boolean Clear (void);
 	boolean Help (void);
@@ -63,6 +65,9 @@ private:
 	CTestSupport *m_pTestSupport;
 
 	boolean m_bContinue;
+
+	boolean m_bNTPActive;
+	boolean m_bSyslogActive;
 
 	char m_LineBuffer[TESTSHELL_MAX_LINE+1];
 	boolean m_bFirstToken;

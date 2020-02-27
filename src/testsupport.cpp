@@ -35,7 +35,8 @@ CTestSupport::CTestSupport (void)
 #ifdef ARM_ALLOW_MULTI_CORE
 	CMultiCoreSupport (CMemorySystem::Get ()),
 #endif
-	m_nFacilityMask ((u32) -1)
+	m_nFacilityMask ((u32) -1),
+	m_pScreen (0)
 {
 	s_pThis = this;
 
@@ -43,7 +44,10 @@ CTestSupport::CTestSupport (void)
 	for (unsigned nCore = 0; nCore < CORES; nCore++)
 	{
 		m_pEntry[nCore] = 0;
+		m_nRotorCount[nCore] = 0;
 	}
+#else
+	m_nRotorCount = 0;
 #endif
 }
 
@@ -70,6 +74,8 @@ boolean CTestSupport::Initialize (void)
 		return FALSE;
 	}
 #endif
+
+	m_pScreen = (CScreenDevice *) CDeviceNameService::Get ()->GetDevice ("tty1", FALSE);
 
 	CUSBKeyboardDevice *pKeyboard =
 		(CUSBKeyboardDevice *) CDeviceNameService::Get ()->GetDevice ("ukbd1", FALSE);
@@ -170,10 +176,21 @@ boolean CTestSupport::JoinSecondaries (void)
 void CTestSupport::Yield (void)
 {
 #ifdef ARM_ALLOW_MULTI_CORE
-	if (ThisCore () == 0)
+	unsigned nCore = ThisCore ();
+	if (nCore == 0)
 #endif
 	{
 		CScheduler::Get ()->Yield ();
+	}
+
+	if (m_pScreen != 0)
+	{
+#ifdef ARM_ALLOW_MULTI_CORE
+		assert (nCore < 4);
+		m_pScreen->Rotor (nCore, m_nRotorCount[nCore]++);
+#else
+		m_pScreen->Rotor (0, m_nRotorCount++);
+#endif
 	}
 }
 

@@ -10,12 +10,8 @@ OBJS	= main.o kernel.o temptask.o testshell.o testsupport.o \
 	  basetest.o singlecoretest.o multicoretest.o testfactory.o \
 	  showmbrtest.o fractaltest.o vcgencmdtest.o
 
-include $(CIRCLEHOME)/app/Rules.mk
-
 LIBS	= $(CIRCLEHOME)/addon/SDCard/libsdcard.a \
 	  $(CIRCLEHOME)/addon/fatfs/libfatfs.a \
-	  $(CIRCLEHOME)/addon/sensor/libsensor.a \
-	  $(CIRCLEHOME)/addon/qemu/libqemusupport.a \
 	  $(CIRCLEHOME)/addon/vc4/sound/libvchiqsound.a \
 	  $(CIRCLEHOME)/addon/vc4/vchiq/libvchiq.a \
 	  $(CIRCLEHOME)/addon/linux/liblinuxemu.a \
@@ -26,6 +22,8 @@ LIBS	= $(CIRCLEHOME)/addon/SDCard/libsdcard.a \
 	  $(CIRCLEHOME)/lib/net/libnet.a \
 	  $(CIRCLEHOME)/lib/sched/libsched.a \
 	  $(CIRCLEHOME)/lib/libcircle.a
+
+include $(CIRCLEHOME)/app/Rules.mk
 
 ifneq ($(strip $(AARCH)),64)
 LIBS	+= $(CIRCLEHOME)/addon/vc4/interface/bcm_host/libbcm_host.a \

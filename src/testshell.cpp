@@ -23,9 +23,14 @@
 #include <circle/devicenameservice.h>
 #include <circle/cputhrottle.h>
 #include <circle/sched/scheduler.h>
+#include <circle/net/netsubsystem.h>
+#include <circle/net/dnsclient.h>
+#include <circle/net/ntpdaemon.h>
+#include <circle/net/syslogdaemon.h>
 #include <circle/sysconfig.h>
 #include <circle/startup.h>
 #include <circle/memory.h>
+#include <circle/timer.h>
 #include <circle/util.h>
 #include <circle/stdarg.h>
 #include <assert.h>
@@ -38,7 +43,9 @@ const char CTestShell::HelpMsg[] =
 	"status [cpu|mem]\tShow CPU (default) or memory status\tst\n"
 	"show [devs]\t\tShow devices\n"
 	"setspeed low|max\tSet CPU speed low or to maximum\n"
-	"sleep SECS\t\tSleep SECS milliseconds\n"
+	"ntp HOST [[-]MIN]\tSet NTP server and time difference\n"
+	"syslog HOST [PORT]\tSet syslog server\n"
+	"sleep SECS\t\tSleep SECS seconds\n"
 	"clear\t\t\tClear the screen\n"
 	"reboot\t\t\tReboot the system\n"
 #ifdef LEAVE_QEMU_ON_HALT
@@ -53,7 +60,9 @@ const char CTestShell::HelpMsg[] =
 CTestShell::CTestShell (CConsole *pConsole, CTestSupport *pTestSupport)
 :	m_pConsole (pConsole),
 	m_pTestSupport (pTestSupport),
-	m_bContinue (TRUE)
+	m_bContinue (TRUE),
+	m_bNTPActive (FALSE),
+	m_bSyslogActive (FALSE)
 {
 }
 
@@ -103,6 +112,20 @@ void CTestShell::Run (void)
 			else if (Command.Compare ("setspeed") == 0)
 			{
 				if (!SetSpeed ())
+				{
+					break;
+				}
+			}
+			else if (Command.Compare ("ntp") == 0)
+			{
+				if (!NTP ())
+				{
+					break;
+				}
+			}
+			else if (Command.Compare ("syslog") == 0)
+			{
+				if (!Syslog ())
 				{
 					break;
 				}
@@ -251,9 +274,111 @@ boolean CTestShell::SetSpeed (void)
 	return FALSE;
 }
 
+boolean CTestShell::NTP (void)
+{
+	if (m_bNTPActive)
+	{
+		Print ("NTP already active\n");
+
+		return FALSE;
+	}
+
+	assert (m_pTestSupport != 0);
+	if (!m_pTestSupport->IsFacilityAvailable (TestFacilityNet))
+	{
+		Print ("Net is not available\n");
+
+		return FALSE;
+	}
+
+	CString NTPServer;
+	if (!GetToken (&NTPServer))
+	{
+		Print ("NTP server expected\n");
+
+		return FALSE;
+	}
+
+	int nTimeDiff = 0;
+
+	CString TimeDiff;
+	if (GetToken (&TimeDiff))
+	{
+		const char *pTimeDiff = TimeDiff;
+		boolean bMinus = pTimeDiff[0] == '-';
+		CString Number (bMinus ? pTimeDiff+1 : pTimeDiff);
+
+		unsigned nMinutes = ConvertNumber (Number);
+		if (   nMinutes != INVALID_NUMBER
+		    && nMinutes < 12*60)
+		{
+			nTimeDiff = (bMinus ? -1 : 1) * (int) nMinutes;
+		}
+		else
+		{
+			UnGetToken (TimeDiff);
+		}
+	}
+
+	CTimer::Get ()->SetTimeZone (nTimeDiff);
+
+	new CNTPDaemon (NTPServer, CNetSubSystem::Get ());
+
+	m_bNTPActive = TRUE;
+
+	return TRUE;
+}
+
+boolean CTestShell::Syslog (void)
+{
+	if (m_bSyslogActive)
+	{
+		Print ("Syslog already active\n");
+
+		return FALSE;
+	}
+
+	assert (m_pTestSupport != 0);
+	if (!m_pTestSupport->IsFacilityAvailable (TestFacilityNet))
+	{
+		Print ("Net is not available\n");
+
+		return FALSE;
+	}
+
+	CString SyslogServer;
+	if (!GetToken (&SyslogServer))
+	{
+		Print ("Syslog server expected\n");
+
+		return FALSE;
+	}
+
+	unsigned nPort = GetNumber ("Port", 1, 65535, TRUE);
+	if (nPort == INVALID_NUMBER)
+	{
+		nPort = SYSLOG_PORT;
+	}
+
+	CIPAddress ServerIP;
+	CDNSClient DNSClient (CNetSubSystem::Get ());
+	if (!DNSClient.Resolve (SyslogServer, &ServerIP))
+	{
+		Print ("Cannot resolve: %s\n", (const char *) SyslogServer);
+
+		return FALSE;
+	}
+
+	new CSysLogDaemon (CNetSubSystem::Get (), ServerIP, nPort);
+
+	m_bSyslogActive = TRUE;
+
+	return TRUE;
+}
+
 boolean CTestShell::Sleep (void)
 {
-	unsigned nSeconds = GetNumber ("Seconds", 1, 60000);
+	unsigned nSeconds = GetNumber ("Seconds", 1, 60);
 	if (nSeconds == INVALID_NUMBER)
 	{
 		return FALSE;
@@ -337,9 +462,10 @@ void CTestShell::ReadLine (void)
 		Print ("unitest> ");
 
 		assert (m_pConsole != 0);
+		assert (m_pTestSupport != 0);
 		while ((nResult = m_pConsole->Read (m_LineBuffer, sizeof m_LineBuffer-1)) <= 0)
 		{
-			CScheduler::Get ()->Yield ();
+			m_pTestSupport->Yield ();
 		}
 
 		assert (nResult < (int) sizeof m_LineBuffer);

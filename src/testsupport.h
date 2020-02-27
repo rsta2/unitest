@@ -22,6 +22,7 @@
 
 #include <circle/sysconfig.h>
 #include <circle/multicore.h>
+#include <circle/screen.h>
 #include <circle/types.h>
 
 enum TTestFacility
@@ -68,11 +69,15 @@ private:
 
 private:
 	u32 m_nFacilityMask;
+	CScreenDevice *m_pScreen;
 
 #ifdef ARM_ALLOW_MULTI_CORE
 	TSecondaryEntry *volatile m_pEntry[CORES];
 	void *m_pParam[CORES];
 	boolean m_bResult[CORES];
+	unsigned m_nRotorCount[CORES];
+#else
+	unsigned m_nRotorCount;
 #endif
 
 	boolean m_bCanceled;
