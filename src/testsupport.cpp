@@ -176,16 +176,21 @@ boolean CTestSupport::JoinSecondaries (void)
 void CTestSupport::Yield (void)
 {
 #ifdef ARM_ALLOW_MULTI_CORE
-	unsigned nCore = ThisCore ();
-	if (nCore == 0)
+	if (ThisCore () == 0)
 #endif
 	{
 		CScheduler::Get ()->Yield ();
 	}
 
+	Rotor ();
+}
+
+void CTestSupport::Rotor (void)
+{
 	if (m_pScreen != 0)
 	{
 #ifdef ARM_ALLOW_MULTI_CORE
+		unsigned nCore = ThisCore ();
 		assert (nCore < 4);
 		m_pScreen->Rotor (nCore, m_nRotorCount[nCore]++);
 #else

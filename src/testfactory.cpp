@@ -20,6 +20,7 @@
 #include "testfactory.h"
 #include "fractaltest.h"
 #include "showmbrtest.h"
+#include "iperftest.h"
 #include "vchiqechotest.h"
 
 #if AARCH == 32
@@ -36,6 +37,10 @@ CBaseTest *CTestFactory::GetTest (const CString &rName, CTestShell *pTestShell,
 	else if (rName.Compare ("showmbr") == 0)
 	{
 		return new CShowMBRTest (pTestShell, pTestSupport);
+	}
+	else if (rName.Compare ("iperf") == 0)
+	{
+		return new CIPerfTest (pTestShell, pTestSupport);
 	}
 	else if (rName.Compare ("vchiqecho") == 0)
 	{
@@ -60,6 +65,7 @@ const char *CTestFactory::GetTestHelp (void)
 	"\n"
 	"fractal\t\tMAXITERATION\t\tDisplay Mandelbrot image\n"
 	"showmbr\t\tDEVICE\t\t\tShow partitions from Master Boot Block\n"
+	"iperf\t\t[HOST [MBPS]]\t\tRun iperf2 server (default) or client\n"
 	"vchiqecho\t[BLKCOUNT [BLKSIZE]]\tSend data blocks via VCHIQ with echo\n"
 #if AARCH == 32
 	"vcgencmd\tCMD [ARG...]\t\tGenerate VideoCore command\n"

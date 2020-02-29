@@ -58,7 +58,8 @@ public:
 	boolean JoinSecondaries (void);		// call from core 0
 #endif
 
-	void Yield (void);
+	void Yield (void);			// calls Rotor()
+	void Rotor (void);
 
 	void StartTest (void);
 	boolean IsTestCanceled (void) const;
