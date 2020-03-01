@@ -23,6 +23,7 @@
 #include <circle/sysconfig.h>
 #include <circle/multicore.h>
 #include <circle/screen.h>
+#include <vc4/vchiq/vchiqdevice.h>
 #include <circle/types.h>
 
 enum TTestFacility
@@ -32,6 +33,8 @@ enum TTestFacility
 	TestFacilityUSB,
 	TestFacilityEMMC,
 	TestFacilityNet,
+	TestFacilityPWM,
+	TestFacilityI2S,
 	TestFacilityVCHIQ
 };
 
@@ -41,11 +44,13 @@ class CTestSupport
 #endif
 {
 public:
-	CTestSupport (void);
+	CTestSupport (CVCHIQDevice *pVCHIQ);
 	~CTestSupport (void);
 
 	void DisableFacility (TTestFacility Facility);
 	boolean IsFacilityAvailable (TTestFacility Facility) const;
+
+	CVCHIQDevice *GetVCHIQDevice (void);
 
 	boolean Initialize (void);
 
@@ -69,6 +74,8 @@ private:
 	static void OnCancel (void);
 
 private:
+	CVCHIQDevice *m_pVCHIQ;
+
 	u32 m_nFacilityMask;
 	CScreenDevice *m_pScreen;
 

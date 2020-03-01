@@ -48,6 +48,7 @@ CKernel::CKernel (void)
 	m_Net (IPAddress, NetMask, DefaultGateway, DNSServer),
 #endif
 	m_Console (&m_Serial),
+	m_TestSupport (&m_VCHIQ),
 	m_TestShell (&m_Console, &m_TestSupport)
 {
 	m_ActLED.Blink (5);	// show we are alive
@@ -150,6 +151,11 @@ boolean CKernel::Initialize (void)
 	{
 		bOK = m_TestSupport.Initialize ();
 	}
+
+#ifdef USE_QEMU
+	m_TestSupport.DisableFacility (TestFacilityPWM);
+	m_TestSupport.DisableFacility (TestFacilityI2S);
+#endif
 
 	return bOK;
 }

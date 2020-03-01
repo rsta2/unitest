@@ -73,7 +73,8 @@ CTestShell::~CTestShell (void)
 
 void CTestShell::Run (void)
 {
-	Print ("\n\nWelcome to Unitest!\n\n");
+	Print ("\n\nWelcome to Unitest!\n\n"
+	       "Enter \"help\" for help!\n\n");
 
 	while (m_bContinue)
 	{

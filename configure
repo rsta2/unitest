@@ -63,7 +63,7 @@ if [[ $qemu == 1 && $aarch == 32 ]] ; then
 	echo "DEFINE += -DNO_PHYSICAL_COUNTER -DUSE_QEMU_USB_FIX" >> Config.mk
 fi
 if [[ $qemu == 1 ]] ; then
-	echo "DEFINE += -DLEAVE_QEMU_ON_HALT" >> Config.mk
+	echo "DEFINE += -DUSE_QEMU -DLEAVE_QEMU_ON_HALT" >> Config.mk
 fi
 
 echo "circle/Config.mk successfully created:"

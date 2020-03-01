@@ -30,11 +30,12 @@
 
 CTestSupport *CTestSupport::s_pThis = 0;
 
-CTestSupport::CTestSupport (void)
+CTestSupport::CTestSupport (CVCHIQDevice *pVCHIQ)
 :
 #ifdef ARM_ALLOW_MULTI_CORE
 	CMultiCoreSupport (CMemorySystem::Get ()),
 #endif
+	m_pVCHIQ (pVCHIQ),
 	m_nFacilityMask ((u32) -1),
 	m_pScreen (0)
 {
@@ -64,6 +65,11 @@ void CTestSupport::DisableFacility (TTestFacility Facility)
 boolean CTestSupport::IsFacilityAvailable (TTestFacility Facility) const
 {
 	return !!(m_nFacilityMask & (1U << Facility));
+}
+
+CVCHIQDevice *CTestSupport::GetVCHIQDevice (void)
+{
+	return m_pVCHIQ;
 }
 
 boolean CTestSupport::Initialize (void)
