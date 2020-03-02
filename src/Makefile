@@ -8,8 +8,9 @@ CIRCLEHOME ?= ../circle
 
 OBJS	= main.o kernel.o temptask.o testshell.o testsupport.o \
 	  basetest.o singlecoretest.o multicoretest.o testfactory.o \
-	  showmbrtest.o fractaltest.o iperftest.o iperfserver.o \
-	  soundtest.o oscillator.o vcgencmdtest.o vchiqechotest.o
+	  fractaltest.o filetest.o fatfstest.o filebasetest.o \
+	  iperftest.o iperfserver.o soundtest.o oscillator.o \
+	  showmbrtest.o vcgencmdtest.o vchiqechotest.o
 
 LIBS	= $(CIRCLEHOME)/addon/SDCard/libsdcard.a \
 	  $(CIRCLEHOME)/addon/fatfs/libfatfs.a \

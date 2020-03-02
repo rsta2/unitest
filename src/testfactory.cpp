@@ -19,6 +19,8 @@
 //
 #include "testfactory.h"
 #include "fractaltest.h"
+#include "filetest.h"
+#include "fatfstest.h"
 #include "showmbrtest.h"
 #include "soundtest.h"
 #include "iperftest.h"
@@ -34,6 +36,14 @@ CBaseTest *CTestFactory::GetTest (const CString &rName, CTestShell *pTestShell,
 	if (rName.Compare ("fractal") == 0)
 	{
 		return new CFractalTest (pTestShell, pTestSupport);
+	}
+	else if (rName.Compare ("files") == 0)
+	{
+		return new CFileTest (pTestShell, pTestSupport);
+	}
+	else if (rName.Compare ("fatfs") == 0)
+	{
+		return new CFatFsTest (pTestShell, pTestSupport);
 	}
 	else if (rName.Compare ("showmbr") == 0)
 	{
@@ -69,6 +79,8 @@ const char *CTestFactory::GetTestHelp (void)
 	"Test\t\tParameters\t\tDescription\n"
 	"\n"
 	"fractal\t\tMAXITERATION\t\tDisplay Mandelbrot image\n"
+	"files\t\tPARTITION [COUNT]\tWrite and read files\n"
+	"fatfs\t\tSD:|USB: [COUNT]\tWrite and read files using FatFs\n"
 	"showmbr\t\tDEVICE\t\t\tShow partitions from Master Boot Block\n"
 	"sound\t\tDEVICE [LHZ [RHZ]]\tPlay tone on sndpwm, sndi2s or sndvchiq\n"
 	"iperf\t\t[HOST [MBPS]]\t\tRun iperf2 server (default) or client\n"
