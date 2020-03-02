@@ -29,6 +29,7 @@
 #include <circle/net/syslogdaemon.h>
 #include <circle/sysconfig.h>
 #include <circle/startup.h>
+#include <circle/multicore.h>
 #include <circle/memory.h>
 #include <circle/timer.h>
 #include <circle/util.h>
@@ -149,7 +150,11 @@ void CTestShell::Run (void)
 #ifdef LEAVE_QEMU_ON_HALT
 			else if (Command.Compare ("exit") == 0)
 			{
+#ifndef ARM_ALLOW_MULTI_CORE
 				halt ();
+#else
+				CMultiCoreSupport::HaltAll ();
+#endif
 			}
 #endif
 			else if (Command.Compare ("help") == 0)
