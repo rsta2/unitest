@@ -78,7 +78,7 @@ const char *CTestFactory::GetTestHelp (void)
 	"\n"
 	"Test\t\tParameters\t\tDescription\n"
 	"\n"
-	"fractal\t\tMAXITERATION\t\tDisplay Mandelbrot image\n"
+	"fractal\t\t[MAXITERATION]\t\tDisplay Mandelbrot image\n"
 	"files\t\tPARTITION [COUNT]\tWrite and read files\n"
 	"fatfs\t\tSD:|USB: [COUNT]\tWrite and read files using FatFs\n"
 	"showmbr\t\tDEVICE\t\t\tShow partitions from Master Boot Block\n"
@@ -86,7 +86,7 @@ const char *CTestFactory::GetTestHelp (void)
 	"iperf\t\t[HOST [MBPS]]\t\tRun iperf2 server (default) or client\n"
 	"vchiqecho\t[BLKCOUNT [BLKSIZE]]\tSend data blocks via VCHIQ with echo\n"
 #if AARCH == 32
-	"vcgencmd\tCMD [ARG...]\t\tGenerate VideoCore command\n"
+	"vcgencmd\tCMD [ARG...]\t\tGenerate VC command\n"
 #endif
 	"\n"
 	"Tests can be aborted by pressing Ctrl-Alt-Del or ^C on serial interface.\n"
