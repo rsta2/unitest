@@ -68,6 +68,7 @@ if [[ $qemu == 1 && $aarch == 32 ]] ; then
 fi
 if [[ $qemu == 1 ]] ; then
 	echo "DEFINE += -DUSE_QEMU -DLEAVE_QEMU_ON_HALT" >> Config.mk
+	echo "DEFINE += -DNO_SDHOST" >> Config.mk
 fi
 
 echo "circle/Config.mk successfully created:"
