@@ -32,15 +32,12 @@
 #define CLIENT_RUNTIME_SECONDS	10
 
 #define MSS			1460
-#define MBPS2US(mbps)		(MSS*8 / (mbps))
 
 static const char From[] = "iperftest";
 
 CIPerfTest::CIPerfTest (CTestShell *pTestShell, CTestSupport *pTestSupport)
 :	CSingleCoreTest (pTestShell, pTestSupport),
-	m_ServerIP ((u32) 0),
-	m_nBandwidth (80),
-	m_nusDelay (MBPS2US (m_nBandwidth))
+	m_ServerIP ((u32) 0)
 {
 }
 
@@ -69,13 +66,6 @@ boolean CIPerfTest::Initialize (void)
 			m_pTestShell->Print ("Cannot resolve: %s\n", (const char *) Server);
 
 			return FALSE;
-		}
-
-		unsigned nBandwidth = m_pTestShell->GetNumber ("Bandwidth", 1, 400, TRUE);
-		if (nBandwidth != INVALID_NUMBER)
-		{
-			m_nBandwidth = nBandwidth;
-			m_nusDelay = MBPS2US (m_nBandwidth);
 		}
 	}
 
@@ -107,8 +97,8 @@ boolean CIPerfTest::Run (void)
 		return FALSE;
 	}
 
-	m_pTestShell->Print ("Sending data with %u Mbps to %s for %u sec\n",
-			     m_nBandwidth, (const char *) IPString, CLIENT_RUNTIME_SECONDS);
+	m_pTestShell->Print ("Sending data to %s for %u sec\n",
+			     (const char *) IPString, CLIENT_RUNTIME_SECONDS);
 
 	unsigned nStartTicks = CTimer::Get ()->GetClockTicks ();
 
@@ -117,14 +107,12 @@ boolean CIPerfTest::Run (void)
 
 	do
 	{
-		if (Socket.Send (Buffer, sizeof Buffer, MSG_DONTWAIT) < 0)
+		if (Socket.Send (Buffer, sizeof Buffer, 0) < 0)
 		{
 			m_pTestShell->Print ("Send failed\n");
 
 			return FALSE;
 		}
-
-		CScheduler::Get ()->usSleep (m_nusDelay);
 
 		m_pTestSupport->Rotor ();
 

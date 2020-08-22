@@ -90,7 +90,7 @@ Help about the different tests will be displayed with the command "help tests":
 	fatfs           SD:|USB: [COUNT]        Write and read files using FatFs
 	showmbr         DEVICE                  Show partitions from Master Boot Block
 	sound           DEVICE [LHZ [RHZ]]      Play tone on sndpwm, sndi2s or sndvchiq
-	iperf           [HOST [MBPS]]           Run iperf2 server (default) or client
+	iperf           [HOST]                  Run iperf2 server (default) or client
 	vchiqecho       [BLKCOUNT [BLKSIZE]]    Send data blocks via VCHIQ with echo
 	vcgencmd        CMD [ARG...]            Generate VC command
 
@@ -111,7 +111,6 @@ Some commands and tests require parameters, which are given in upper case letter
 | COUNT        | numeric | Number of test runs (10)                              | 1-100      |
 | LHZ          | numeric | Tone frequency for left channel in Hertz (440)        | 8-12544    |
 | RHZ          | numeric | Tone frequency for right channel in Hertz (440)       | 8-12544    |
-| MBPS         | numeric | Data will be sent with this bandwidth in Mbits/s (80) | 1-400      |
 | BLKCOUNT     | numeric | Number of blocks to be sent (500000)                  | 1-10000000 |
 | BLKSIZE      | numeric | Size of one data block to be sent (4000)              | 100-4000   |
 | CMD          | string  | VC command (e.g. "commands")                          |            |

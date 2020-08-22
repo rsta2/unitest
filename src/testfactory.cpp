@@ -83,7 +83,7 @@ const char *CTestFactory::GetTestHelp (void)
 	"fatfs\t\tSD:|USB: [COUNT]\tWrite and read files using FatFs\n"
 	"showmbr\t\tDEVICE\t\t\tShow partitions from Master Boot Block\n"
 	"sound\t\tDEVICE [LHZ [RHZ]]\tPlay tone on sndpwm, sndi2s or sndvchiq\n"
-	"iperf\t\t[HOST [MBPS]]\t\tRun iperf2 server (default) or client\n"
+	"iperf\t\t[HOST]\t\t\tRun iperf2 server (default) or client\n"
 	"vchiqecho\t[BLKCOUNT [BLKSIZE]]\tSend data blocks via VCHIQ with echo\n"
 #if AARCH == 32
 	"vcgencmd\tCMD [ARG...]\t\tGenerate VC command\n"

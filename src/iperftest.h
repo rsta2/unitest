@@ -38,8 +38,6 @@ public:
 
 private:
 	CIPAddress m_ServerIP;
-	unsigned m_nBandwidth;		// Mbps
-	unsigned m_nusDelay;
 };
 
 #endif
