@@ -2,7 +2,7 @@
 // soundtest.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2021  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@
 #include "soundtest.h"
 #include <circle/pwmsoundbasedevice.h>
 #include <circle/i2ssoundbasedevice.h>
+#include <circle/hdmisoundbasedevice.h>
 #include <circle/sched/scheduler.h>
 #include <vc4/sound/vchiqsoundbasedevice.h>
 #include <circle/interrupt.h>
@@ -110,7 +111,21 @@ boolean CSoundTest::Initialize (void)
 		}
 
 		m_pSound = new CI2SSoundBaseDevice (CInterruptSystem::Get (),
-						    SAMPLE_RATE, CHUNK_SIZE);
+						    SAMPLE_RATE, CHUNK_SIZE, FALSE,
+						    m_pTestSupport->GetI2CMaster ());
+	}
+	else if (SoundDevice.Compare ("sndhdmi") == 0)
+	{
+		if (!m_pTestSupport->IsFacilityAvailable (TestFacilityHDMI))
+		{
+			m_pTestShell->Print ("HDMI is not available\n");
+
+			return FALSE;
+		}
+
+		m_pSound = new CHDMISoundBaseDevice (CInterruptSystem::Get (), SAMPLE_RATE);
+
+		m_pTestSupport->DisableFacility (TestFacilityVCHIQ);
 	}
 	else if (SoundDevice.Compare ("sndvchiq") == 0)
 	{
@@ -127,10 +142,12 @@ boolean CSoundTest::Initialize (void)
 
 		// PWM sound does not work any more after VCHIQ sound has been used
 		m_pTestSupport->DisableFacility (TestFacilityPWM);
+		m_pTestSupport->DisableFacility (TestFacilityI2S);
+		m_pTestSupport->DisableFacility (TestFacilityHDMI);
 	}
 	else
 	{
-		m_pTestShell->Print ("Device must be sndpwm, sndi2s or sndvchiq\n");
+		m_pTestShell->Print ("Device must be sndpwm, sndi2s, sndhdmi or sndvchiq\n");
 
 		return FALSE;
 	}

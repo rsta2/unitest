@@ -2,7 +2,7 @@
 // testsupport.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2021  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,11 +30,12 @@
 
 CTestSupport *CTestSupport::s_pThis = 0;
 
-CTestSupport::CTestSupport (CVCHIQDevice *pVCHIQ)
+CTestSupport::CTestSupport (CI2CMaster *pI2CMaster, CVCHIQDevice *pVCHIQ)
 :
 #ifdef ARM_ALLOW_MULTI_CORE
 	CMultiCoreSupport (CMemorySystem::Get ()),
 #endif
+	m_pI2CMaster (pI2CMaster),
 	m_pVCHIQ (pVCHIQ),
 	m_nFacilityMask ((u32) -1),
 	m_pScreen (0)
@@ -65,6 +66,11 @@ void CTestSupport::DisableFacility (TTestFacility Facility)
 boolean CTestSupport::IsFacilityAvailable (TTestFacility Facility) const
 {
 	return !!(m_nFacilityMask & (1U << Facility));
+}
+
+CI2CMaster *CTestSupport::GetI2CMaster (void)
+{
+	return m_pI2CMaster;
 }
 
 CVCHIQDevice *CTestSupport::GetVCHIQDevice (void)

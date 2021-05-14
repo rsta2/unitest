@@ -2,7 +2,7 @@
 // kernel.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2021  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 //
 #include "kernel.h"
 #include "temptask.h"
+#include <circle/machineinfo.h>
 #include <circle/memory.h>
 #if AARCH == 32
 	#include <interface/bcm_host/bcm_host.h>
@@ -41,6 +42,7 @@ CKernel::CKernel (void)
 	m_Serial (&m_Interrupt, TRUE),
 	m_Timer (&m_Interrupt),
 	m_Logger (m_Options.GetLogLevel (), &m_Timer),
+	m_I2CMaster (CMachineInfo::Get ()->GetDevice (DeviceI2CMaster), TRUE),
 	m_USBHCI (&m_Interrupt, &m_Timer),
 	m_EMMC (&m_Interrupt, &m_Timer, &m_ActLED),
 	m_VCHIQ (CMemorySystem::Get (), &m_Interrupt),
@@ -48,7 +50,7 @@ CKernel::CKernel (void)
 	m_Net (IPAddress, NetMask, DefaultGateway, DNSServer),
 #endif
 	m_Console (&m_Serial),
-	m_TestSupport (&m_VCHIQ),
+	m_TestSupport (&m_I2CMaster, &m_VCHIQ),
 	m_TestShell (&m_Console, &m_TestSupport)
 {
 	m_ActLED.Blink (5);	// show we are alive
@@ -96,6 +98,13 @@ boolean CKernel::Initialize (void)
 	{
 		bOK = m_Timer.Initialize ();
 	}
+
+#ifndef USE_QEMU
+	if (bOK)
+	{
+		bOK = m_I2CMaster.Initialize ();
+	}
+#endif
 
 	if (bOK)
 	{
@@ -155,6 +164,7 @@ boolean CKernel::Initialize (void)
 #ifdef USE_QEMU
 	m_TestSupport.DisableFacility (TestFacilityPWM);
 	m_TestSupport.DisableFacility (TestFacilityI2S);
+	m_TestSupport.DisableFacility (TestFacilityHDMI);
 #endif
 
 	return bOK;

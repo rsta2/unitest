@@ -2,7 +2,7 @@
 // testsupport.h
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2021  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@
 #include <circle/sysconfig.h>
 #include <circle/multicore.h>
 #include <circle/screen.h>
+#include <circle/i2cmaster.h>
 #include <vc4/vchiq/vchiqdevice.h>
 #include <circle/types.h>
 
@@ -35,6 +36,7 @@ enum TTestFacility
 	TestFacilityNet,
 	TestFacilityPWM,
 	TestFacilityI2S,
+	TestFacilityHDMI,
 	TestFacilityVCHIQ
 };
 
@@ -44,12 +46,13 @@ class CTestSupport
 #endif
 {
 public:
-	CTestSupport (CVCHIQDevice *pVCHIQ);
+	CTestSupport (CI2CMaster *pI2CMaster, CVCHIQDevice *pVCHIQ);
 	~CTestSupport (void);
 
 	void DisableFacility (TTestFacility Facility);
 	boolean IsFacilityAvailable (TTestFacility Facility) const;
 
+	CI2CMaster *GetI2CMaster (void);
 	CVCHIQDevice *GetVCHIQDevice (void);
 
 	boolean Initialize (void);
@@ -74,6 +77,7 @@ private:
 	static void OnCancel (void);
 
 private:
+	CI2CMaster *m_pI2CMaster;
 	CVCHIQDevice *m_pVCHIQ;
 
 	u32 m_nFacilityMask;

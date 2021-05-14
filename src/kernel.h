@@ -2,7 +2,7 @@
 // kernel.h
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2021  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
 #include <circle/serial.h>
 #include <circle/timer.h>
 #include <circle/logger.h>
+#include <circle/i2cmaster.h>
 #include <circle/usb/usbhcidevice.h>
 #include <SDCard/emmc.h>
 #include <circle/sched/scheduler.h>
@@ -69,6 +70,7 @@ private:
 	CSerialDevice		m_Serial;
 	CTimer			m_Timer;
 	CLogger			m_Logger;
+	CI2CMaster		m_I2CMaster;
 	CUSBHCIDevice		m_USBHCI;
 	CEMMCDevice		m_EMMC;
 	CScheduler		m_Scheduler;
