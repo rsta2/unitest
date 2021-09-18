@@ -206,6 +206,8 @@ boolean CSoundTest::Run (void)
 	if (!m_pSound->Start ())
 	{
 		m_pTestShell->Print ("Cannot start sound device\n");
+
+		return FALSE;
 	}
 
 	m_pTestShell->Print ("Playing modulated %.0f/%.0f Hz tones (L/R)\n",
