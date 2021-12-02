@@ -2,7 +2,7 @@
 // testshell.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2021  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -41,9 +41,10 @@ const char CTestShell::HelpMsg[] =
 	"Command\t\t\tDescription\t\t\t\tAlias\n"
 	"\n"
 	"runtest TEST\t\tRun the given test\t\t\trun\n"
-	"status [cpu|mem]\tShow CPU (default) or memory status\tst\n"
+	"status [cpu|mem|task]\tShow CPU (default), memory, task status\tst\n"
 	"show [devs]\t\tShow devices\n"
 	"setspeed low|max\tSet CPU speed low or to maximum\n"
+	"task [susp|res] TASK\tSuspend or resume task\n"
 	"ntp HOST [[-]MIN]\tSet NTP server and time difference\n"
 	"syslog HOST [PORT]\tSet syslog server\n"
 	"sleep SECS\t\tSleep SECS seconds\n"
@@ -114,6 +115,13 @@ void CTestShell::Run (void)
 			else if (Command.Compare ("setspeed") == 0)
 			{
 				if (!SetSpeed ())
+				{
+					break;
+				}
+			}
+			else if (Command.Compare ("task") == 0)
+			{
+				if (!Task ())
 				{
 					break;
 				}
@@ -225,6 +233,13 @@ boolean CTestShell::Status (void)
 
 			return TRUE;
 		}
+		else if (Option.Compare ("task") == 0)
+		{
+			assert (m_pConsole != 0);
+			CScheduler::Get ()->ListTasks (m_pConsole);
+
+			return TRUE;
+		}
 		else
 		{
 			UnGetToken (Option);
@@ -278,6 +293,64 @@ boolean CTestShell::SetSpeed (void)
 	Print ("Speed expected\n");
 
 	return FALSE;
+}
+
+boolean CTestShell::Task (void)
+{
+	CString Subcommand;
+	if (!GetToken (&Subcommand))
+	{
+		Print ("Subcommand expected\n");
+
+		return FALSE;
+	}
+
+	CString TaskName;
+	if (!GetToken (&TaskName))
+	{
+		Print ("Task name expected\n");
+
+		return FALSE;
+	}
+
+	CTask *pTask = CScheduler::Get ()->GetTask (TaskName);
+	if (pTask == 0)
+	{
+		Print ("Task not found: %s\n", (const char *) TaskName);
+
+		return FALSE;
+	}
+
+	if (Subcommand.Compare ("susp") == 0)
+	{
+		if (pTask->IsSuspended ())
+		{
+			Print ("Task is already suspended\n");
+
+			return FALSE;
+		}
+
+		pTask->Suspend ();
+	}
+	else if (Subcommand.Compare ("res") == 0)
+	{
+		if (!pTask->IsSuspended ())
+		{
+			Print ("Task is not suspended\n");
+
+			return FALSE;
+		}
+
+		pTask->Resume ();
+	}
+	else
+	{
+		Print ("Invalid subcommand: %s\n", (const char *) Subcommand);
+
+		return FALSE;
+	}
+
+	return TRUE;
 }
 
 boolean CTestShell::NTP (void)

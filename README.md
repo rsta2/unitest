@@ -68,9 +68,10 @@ Now power on your Raspberry Pi and wait for the prompt. You can display a list o
 	Command                 Description                             Alias
 
 	runtest TEST            Run the given test                      run
-	status [cpu|mem]        Show CPU (default) or memory status     st
+	status [cpu|mem|task]   Show CPU (default), memory, task status st
 	show [devs]             Show devices
 	setspeed low|max        Set CPU speed low or to maximum
+	task [susp|res] TASK    Suspend or resume task
 	ntp HOST [[-]MIN]       Set NTP server and time difference
 	syslog HOST [PORT]      Set syslog server
 	sleep SECS              Sleep SECS seconds
@@ -103,6 +104,7 @@ Some commands and tests require parameters, which are given in upper case letter
 | TEST         | string  | Name of a test (see "help tests")                     |            |
 | DEVICE       | string  | Name of block device (e.g. "emmc1")                   |            |
 | PARTITION    | string  | Name of partition (e.g. "emmc1-1")                    |            |
+| TASK         | string  | Name of task (e.g. "dhcp", "@a699c0"                  |            |
 | HOST         | string  | Hostname or IP address                                |            |
 | PORT         | numeric | Socket port number                                    | 1-65535    |
 | MIN          | numeric | Time difference from UTC in minutes (0)               | -719-719   |
