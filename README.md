@@ -90,7 +90,7 @@ Help about the different tests will be displayed with the command "help tests":
 	files           PARTITION [COUNT]       Write and read files
 	fatfs           SD:|USB: [COUNT]        Write and read files using FatFs
 	showmbr         DEVICE                  Show partitions from Master Boot Block
-	sound           DEVICE [LHZ [RHZ]]      Play tone on sndpwm, sndi2s or sndvchiq
+	sound           DEVICE [LHZ [RHZ]]      Play tone on sndpwm, sndi2s, sndhdmi, sndusb or sndvchiq
 	iperf           [HOST]                  Run iperf2 server (default) or client
 	vchiqecho       [BLKCOUNT [BLKSIZE]]    Send data blocks via VCHIQ with echo
 	vcgencmd        CMD [ARG...]            Generate VC command
@@ -102,7 +102,7 @@ Some commands and tests require parameters, which are given in upper case letter
 | Parameter    | Type    | Description (default value)                           | Range      |
 | ------------ | ------- | ----------------------------------------------------- | ---------- |
 | TEST         | string  | Name of a test (see "help tests")                     |            |
-| DEVICE       | string  | Name of block device (e.g. "emmc1")                   |            |
+| DEVICE       | string  | Name of block or sound device (e.g. "emmc1")          |            |
 | PARTITION    | string  | Name of partition (e.g. "emmc1-1")                    |            |
 | TASK         | string  | Name of task (e.g. "dhcp", "@a699c0"                  |            |
 | HOST         | string  | Hostname or IP address                                |            |

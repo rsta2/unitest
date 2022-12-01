@@ -2,7 +2,7 @@
 // soundtest.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020-2021  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2022  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -18,9 +18,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 #include "soundtest.h"
-#include <circle/pwmsoundbasedevice.h>
-#include <circle/i2ssoundbasedevice.h>
-#include <circle/hdmisoundbasedevice.h>
+#include <circle/sound/pwmsoundbasedevice.h>
+#include <circle/sound/i2ssoundbasedevice.h>
+#include <circle/sound/hdmisoundbasedevice.h>
+#include <circle/sound/usbsoundbasedevice.h>
 #include <circle/sched/scheduler.h>
 #include <vc4/sound/vchiqsoundbasedevice.h>
 #include <circle/interrupt.h>
@@ -127,6 +128,19 @@ boolean CSoundTest::Initialize (void)
 
 		m_pTestSupport->DisableFacility (TestFacilityVCHIQ);
 	}
+#if RASPPI >= 4
+	else if (SoundDevice.Compare ("sndusb") == 0)
+	{
+		if (!m_pTestSupport->IsFacilityAvailable (TestFacilityUSB))
+		{
+			m_pTestShell->Print ("USB is not available\n");
+
+			return FALSE;
+		}
+
+		m_pSound = new CUSBSoundBaseDevice (SAMPLE_RATE);
+	}
+#endif
 	else if (SoundDevice.Compare ("sndvchiq") == 0)
 	{
 		if (!m_pTestSupport->IsFacilityAvailable (TestFacilityVCHIQ))

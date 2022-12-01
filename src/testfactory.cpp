@@ -2,7 +2,7 @@
 // testfactory.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020-2021  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2022  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -82,7 +82,11 @@ const char *CTestFactory::GetTestHelp (void)
 	"files\t\tPARTITION [COUNT]\tWrite and read files\n"
 	"fatfs\t\tSD:|USB: [COUNT]\tWrite and read files using FatFs\n"
 	"showmbr\t\tDEVICE\t\t\tShow partitions from Master Boot Block\n"
-	"sound\t\tDEVICE [LHZ [RHZ]]\tPlay tone on sndpwm, sndi2s, sndhdmi or sndvchiq\n"
+	"sound\t\tDEVICE [LHZ [RHZ]]\tPlay tone on sndpwm, sndi2s, sndhdmi"
+#if RASPPI >= 4
+	", sndusb"
+#endif
+	" or sndvchiq\n"
 	"iperf\t\t[HOST]\t\t\tRun iperf2 server (default) or client\n"
 	"vchiqecho\t[BLKCOUNT [BLKSIZE]]\tSend data blocks via VCHIQ with echo\n"
 #if AARCH == 32
