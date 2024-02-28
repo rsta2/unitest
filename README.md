@@ -1,7 +1,7 @@
 Unitest
 =======
 
-> Raspberry Pi is a trademark of the Raspberry Pi Foundation.
+> Raspberry Pi is a trademark of Raspberry Pi Ltd.
 
 > If you read this file in an editor you should switch line wrapping on.
 
@@ -32,9 +32,9 @@ When the toolchain is installed on your computer you can build Unitest using the
 	make clean
 	make -j
 
-The `configure` command writes a *Config.mk* file for Circle. "4" is the major revision number of your Raspberry Pi (1, 2, 3 or 4). The second (optional) parameter is the prefix of the commands of your toolchain and can be preceded with a path. Do not forget the dash at the end of the prefix!
+The `configure` command writes a *Config.mk* file for Circle. "4" is the major revision number of your Raspberry Pi (1, 2, 3, 4 or 5). The second (optional) parameter is the prefix of the commands of your toolchain and can be preceded with a path. Do not forget the dash at the end of the prefix!
 
-An optional third parameter can be appended to specify the bit size of the ARM architecture to be used as build target. It can be "32" (default) or "64" (for Raspberry Pi 3 and 4 only).
+An optional third parameter can be appended to specify the bit size of the ARM architecture to be used as build target. It can be "32" (default) or "64" (for Raspberry Pi 3, 4 and 5 only).
 
 If the build was successful, you find the executable image file of Unitest in the *src/* subdirectory with the name *kernel.img* (Raspberry Pi 1), *kernel7.img* (Raspberry Pi 2), *kernel8-32.img* (Raspberry Pi 3) or *kernel7l.img* (Raspberry Pi 4).
 
@@ -48,7 +48,7 @@ Furthermore you need the Raspberry Pi firmware. You can get it as follows:
 	cd circle/boot
 	make
 
-You have to copy the three files *bootcode.bin*, *start.elf* and *fixup.dat* from the *circle/boot/* subdirectory to the FAT partition on the SD card. The Raspberry Pi 4 requires different firmware files. Please read the file *circle/boot/README* for details!
+You have to copy the three files *bootcode.bin*, *start.elf* and *fixup.dat* from the *circle/boot/* subdirectory to the FAT partition on the SD card. The Raspberry Pi 4 and 5 require different firmware files. Please read the file *circle/boot/README* for details!
 
 Put the SD card into the card reader of your Raspberry Pi.
 

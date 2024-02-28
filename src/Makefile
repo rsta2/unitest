@@ -14,8 +14,6 @@ OBJS	= main.o kernel.o temptask.o testshell.o testsupport.o \
 
 LIBS	= $(CIRCLEHOME)/addon/SDCard/libsdcard.a \
 	  $(CIRCLEHOME)/addon/fatfs/libfatfs.a \
-	  $(CIRCLEHOME)/addon/vc4/sound/libvchiqsound.a \
-	  $(CIRCLEHOME)/addon/vc4/vchiq/libvchiq.a \
 	  $(CIRCLEHOME)/addon/linux/liblinuxemu.a \
 	  $(CIRCLEHOME)/lib/usb/libusb.a \
 	  $(CIRCLEHOME)/lib/input/libinput.a \
@@ -32,6 +30,11 @@ ifneq ($(strip $(AARCH)),64)
 LIBS	+= $(CIRCLEHOME)/addon/vc4/interface/bcm_host/libbcm_host.a \
 	   $(CIRCLEHOME)/addon/vc4/interface/vmcs_host/libvmcs_host.a \
 	   $(CIRCLEHOME)/addon/vc4/interface/vcos/libvcos.a
+endif
+
+ifneq ($(strip $(RASPPI)),5)
+LIBS	+= $(CIRCLEHOME)/addon/vc4/vchiq/libvchiq.a \
+	   $(CIRCLEHOME)/addon/vc4/sound/libvchiqsound.a
 endif
 
 -include $(DEPS)

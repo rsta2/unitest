@@ -2,7 +2,7 @@
 // soundtest.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020-2022  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2024  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -90,6 +90,7 @@ boolean CSoundTest::Initialize (void)
 	}
 
 	assert (m_pSound == 0);
+#if RASPPI <= 4
 	if (SoundDevice.Compare ("sndpwm") == 0)
 	{
 		if (!m_pTestSupport->IsFacilityAvailable (TestFacilityPWM))
@@ -161,10 +162,29 @@ boolean CSoundTest::Initialize (void)
 	}
 	else
 	{
-		m_pTestShell->Print ("Device must be sndpwm, sndi2s, sndhdmi or sndvchiq\n");
+		m_pTestShell->Print ("Device must be sndpwm, sndi2s, sndhdmi, sndusb or sndvchiq\n");
 
 		return FALSE;
 	}
+#else
+	if (SoundDevice.Compare ("sndusb") == 0)
+	{
+		if (!m_pTestSupport->IsFacilityAvailable (TestFacilityUSB))
+		{
+			m_pTestShell->Print ("USB is not available\n");
+
+			return FALSE;
+		}
+
+		m_pSound = new CUSBSoundBaseDevice (SAMPLE_RATE);
+	}
+	else
+	{
+		m_pTestShell->Print ("Device must be sndusb\n");
+
+		return FALSE;
+	}
+#endif
 
 	unsigned nFrequency = m_pTestShell->GetNumber ("Left frequency", 8, 12544, TRUE);
 	if (nFrequency != INVALID_NUMBER)

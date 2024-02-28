@@ -2,7 +2,7 @@
 // vchiqechotest.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2024  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@
 #include <circle/macros.h>
 #include <circle/util.h>
 #include <assert.h>
+
+#if RASPPI <= 4
 
 #define DEFAULT_BLOCKSIZE	4000
 #define DEFAULT_COUNT		500000
@@ -265,3 +267,5 @@ VCHIQ_STATUS_T CVCHIQEchoTest::ServiceCallback (VCHIQ_REASON_T Reason, VCHIQ_HEA
 
 	return VCHIQ_SUCCESS;
 }
+
+#endif

@@ -2,7 +2,7 @@
 // kernel.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020-2021  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2024  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -45,12 +45,18 @@ CKernel::CKernel (void)
 	m_I2CMaster (CMachineInfo::Get ()->GetDevice (DeviceI2CMaster), TRUE),
 	m_USBHCI (&m_Interrupt, &m_Timer),
 	m_EMMC (&m_Interrupt, &m_Timer, &m_ActLED),
+#if RASPPI <= 4
 	m_VCHIQ (CMemorySystem::Get (), &m_Interrupt),
+#endif
 #ifndef USE_DHCP
 	m_Net (IPAddress, NetMask, DefaultGateway, DNSServer),
 #endif
 	m_Console (&m_Serial),
+#if RASPPI <= 4
 	m_TestSupport (&m_I2CMaster, &m_VCHIQ),
+#else
+	m_TestSupport (&m_I2CMaster, 0),
+#endif
 	m_TestShell (&m_Console, &m_TestSupport)
 {
 	m_ActLED.Blink (5);	// show we are alive
@@ -131,6 +137,7 @@ boolean CKernel::Initialize (void)
 
 	if (bOK)
 	{
+#if RASPPI <= 4
 		if (m_VCHIQ.Initialize ())
 		{
 #if AARCH == 32
@@ -138,6 +145,7 @@ boolean CKernel::Initialize (void)
 #endif
 		}
 		else
+#endif
 		{
 			m_TestSupport.DisableFacility (TestFacilityVCHIQ);
 		}

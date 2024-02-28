@@ -2,7 +2,7 @@
 // testsupport.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020-2021  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2024  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -96,8 +96,13 @@ boolean CTestSupport::Initialize (void)
 		pKeyboard->RegisterShutdownHandler (OnCancel);
 	}
 
+#if RASPPI <= 4
 	CSerialDevice *pSerial =
 		(CSerialDevice *) CDeviceNameService::Get ()->GetDevice ("ttyS1", FALSE);
+#else
+	CSerialDevice *pSerial =
+		(CSerialDevice *) CDeviceNameService::Get ()->GetDevice ("ttyS11", FALSE);
+#endif
 	if (pSerial != 0)
 	{
 		pSerial->RegisterMagicReceivedHandler ("\x03", OnCancel);

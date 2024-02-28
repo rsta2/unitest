@@ -2,7 +2,7 @@
 // testfactory.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020-2022  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2024  R. Stange <rsta2@o2online.de>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -57,10 +57,12 @@ CBaseTest *CTestFactory::GetTest (const CString &rName, CTestShell *pTestShell,
 	{
 		return new CIPerfTest (pTestShell, pTestSupport);
 	}
+#if RASPPI <= 4
 	else if (rName.Compare ("vchiqecho") == 0)
 	{
 		return new CVCHIQEchoTest (pTestShell, pTestSupport);
 	}
+#endif
 #if AARCH == 32
 	else if (rName.Compare ("vcgencmd") == 0)
 	{
@@ -88,7 +90,9 @@ const char *CTestFactory::GetTestHelp (void)
 #endif
 	" or sndvchiq\n"
 	"iperf\t\t[HOST]\t\t\tRun iperf2 server (default) or client\n"
+#if RASPPI <= 4
 	"vchiqecho\t[BLKCOUNT [BLKSIZE]]\tSend data blocks via VCHIQ with echo\n"
+#endif
 #if AARCH == 32
 	"vcgencmd\tCMD [ARG...]\t\tGenerate VC command\n"
 #endif
