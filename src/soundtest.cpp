@@ -90,7 +90,6 @@ boolean CSoundTest::Initialize (void)
 	}
 
 	assert (m_pSound == 0);
-#if RASPPI <= 4
 	if (SoundDevice.Compare ("sndpwm") == 0)
 	{
 		if (!m_pTestSupport->IsFacilityAvailable (TestFacilityPWM))
@@ -116,6 +115,7 @@ boolean CSoundTest::Initialize (void)
 						    SAMPLE_RATE, CHUNK_SIZE, FALSE,
 						    m_pTestSupport->GetI2CMaster ());
 	}
+#if RASPPI <= 4
 	else if (SoundDevice.Compare ("sndhdmi") == 0)
 	{
 		if (!m_pTestSupport->IsFacilityAvailable (TestFacilityHDMI))
@@ -129,6 +129,7 @@ boolean CSoundTest::Initialize (void)
 
 		m_pTestSupport->DisableFacility (TestFacilityVCHIQ);
 	}
+#endif
 #if RASPPI >= 4
 	else if (SoundDevice.Compare ("sndusb") == 0)
 	{
@@ -142,6 +143,7 @@ boolean CSoundTest::Initialize (void)
 		m_pSound = new CUSBSoundBaseDevice (SAMPLE_RATE);
 	}
 #endif
+#if RASPPI <= 4
 	else if (SoundDevice.Compare ("sndvchiq") == 0)
 	{
 		if (!m_pTestSupport->IsFacilityAvailable (TestFacilityVCHIQ))
@@ -160,31 +162,13 @@ boolean CSoundTest::Initialize (void)
 		m_pTestSupport->DisableFacility (TestFacilityI2S);
 		m_pTestSupport->DisableFacility (TestFacilityHDMI);
 	}
+#endif
 	else
 	{
 		m_pTestShell->Print ("Device must be sndpwm, sndi2s, sndhdmi, sndusb or sndvchiq\n");
 
 		return FALSE;
 	}
-#else
-	if (SoundDevice.Compare ("sndusb") == 0)
-	{
-		if (!m_pTestSupport->IsFacilityAvailable (TestFacilityUSB))
-		{
-			m_pTestShell->Print ("USB is not available\n");
-
-			return FALSE;
-		}
-
-		m_pSound = new CUSBSoundBaseDevice (SAMPLE_RATE);
-	}
-	else
-	{
-		m_pTestShell->Print ("Device must be sndusb\n");
-
-		return FALSE;
-	}
-#endif
 
 	unsigned nFrequency = m_pTestShell->GetNumber ("Left frequency", 8, 12544, TRUE);
 	if (nFrequency != INVALID_NUMBER)
