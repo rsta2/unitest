@@ -115,7 +115,6 @@ boolean CSoundTest::Initialize (void)
 						    SAMPLE_RATE, CHUNK_SIZE, FALSE,
 						    m_pTestSupport->GetI2CMaster ());
 	}
-#if RASPPI <= 4
 	else if (SoundDevice.Compare ("sndhdmi") == 0)
 	{
 		if (!m_pTestSupport->IsFacilityAvailable (TestFacilityHDMI))
@@ -129,7 +128,6 @@ boolean CSoundTest::Initialize (void)
 
 		m_pTestSupport->DisableFacility (TestFacilityVCHIQ);
 	}
-#endif
 #if RASPPI >= 4
 	else if (SoundDevice.Compare ("sndusb") == 0)
 	{
