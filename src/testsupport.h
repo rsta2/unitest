@@ -2,7 +2,7 @@
 // testsupport.h
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020-2021  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2025  R. Stange <rsta2@gmx.net>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ enum TTestFacility
 	TestFacilityKeyboard,
 	TestFacilityUSB,
 	TestFacilityEMMC,
+	TestFacilityNVMe,
 	TestFacilityNet,
 	TestFacilityPWM,
 	TestFacilityI2S,

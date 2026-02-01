@@ -2,7 +2,7 @@
 // kernel.h
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020-2024  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2025  R. Stange <rsta2@gmx.net>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -41,6 +41,10 @@
 #include "testsupport.h"
 #include "testshell.h"
 
+#if RASPPI >= 5
+	#include <nvme/nvme.h>
+#endif
+
 enum TShutdownMode
 {
 	ShutdownNone,
@@ -73,6 +77,10 @@ private:
 	CI2CMaster		m_I2CMaster;
 	CUSBHCIDevice		m_USBHCI;
 	CEMMCDevice		m_EMMC;
+#if RASPPI >= 5
+	CNVMeDevice		m_NVMe;
+#endif
+
 	CScheduler		m_Scheduler;
 #if RASPPI <= 4
 	CVCHIQDevice		m_VCHIQ;

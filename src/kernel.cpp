@@ -2,7 +2,7 @@
 // kernel.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020-2024  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2025  R. Stange <rsta2@gmx.net>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -45,6 +45,9 @@ CKernel::CKernel (void)
 	m_I2CMaster (CMachineInfo::Get ()->GetDevice (DeviceI2CMaster), TRUE),
 	m_USBHCI (&m_Interrupt, &m_Timer),
 	m_EMMC (&m_Interrupt, &m_Timer, &m_ActLED),
+#if RASPPI >= 5
+	m_NVMe (&m_Interrupt),
+#endif
 #if RASPPI <= 4
 	m_VCHIQ (CMemorySystem::Get (), &m_Interrupt),
 #endif
@@ -134,6 +137,16 @@ boolean CKernel::Initialize (void)
 			m_TestSupport.DisableFacility (TestFacilityEMMC);
 		}
 	}
+
+#if RASPPI >= 5
+	if (bOK)
+	{
+		if (!m_NVMe.Initialize ())
+		{
+			m_TestSupport.DisableFacility (TestFacilityNVMe);
+		}
+	}
+#endif
 
 	if (bOK)
 	{

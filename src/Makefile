@@ -13,6 +13,7 @@ OBJS	= main.o kernel.o temptask.o testshell.o testsupport.o \
 	  showmbrtest.o vcgencmdtest.o vchiqechotest.o
 
 LIBS	= $(CIRCLEHOME)/addon/SDCard/libsdcard.a \
+	  $(CIRCLEHOME)/addon/nvme/libnvme.a \
 	  $(CIRCLEHOME)/addon/fatfs/libfatfs.a \
 	  $(CIRCLEHOME)/addon/linux/liblinuxemu.a \
 	  $(CIRCLEHOME)/lib/usb/libusb.a \

@@ -2,7 +2,7 @@
 // fatfstest.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2025  R. Stange <rsta2@gmx.net>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -42,7 +42,8 @@ boolean CFatFsTest::Initialize (void)
 	if (   m_PartitionName.Compare ("SD:") != 0
 	    && m_PartitionName.Compare ("USB:") != 0
 	    && m_PartitionName.Compare ("USB2:") != 0
-	    && m_PartitionName.Compare ("USB3:") != 0)
+	    && m_PartitionName.Compare ("USB3:") != 0
+	    && m_PartitionName.Compare ("NVME:") != 0)
 	{
 		m_pTestShell->Print ("Invalid device: %s\n", (const char *) m_PartitionName);
 

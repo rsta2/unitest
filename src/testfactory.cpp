@@ -2,7 +2,7 @@
 // testfactory.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2020-2024  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2020-2025  R. Stange <rsta2@gmx.net>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -82,7 +82,7 @@ const char *CTestFactory::GetTestHelp (void)
 	"\n"
 	"fractal\t\t[MAXITERATION]\t\tDisplay Mandelbrot image\n"
 	"files\t\tPARTITION [COUNT]\tWrite and read files\n"
-	"fatfs\t\tSD:|USB: [COUNT]\tWrite and read files using FatFs\n"
+	"fatfs\t\tSD:|USB:|NVME: [COUNT]\tWrite and read files using FatFs\n"
 	"showmbr\t\tDEVICE\t\t\tShow partitions from Master Boot Block\n"
 	"sound\t\tDEVICE [LHZ [RHZ]]\tPlay tone on sndpwm, sndi2s, sndhdmi"
 #if RASPPI >= 4

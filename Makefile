@@ -14,6 +14,7 @@ all:
 	make -C circle/addon/fatfs
 	make -C circle/addon/linux
 	make -C circle/addon/SDCard
+	make -C circle/addon/nvme
 ifneq ($(strip $(RASPPI)),5)
 	cd circle/addon/vc4 && ./makeall --nosample
 endif
@@ -27,6 +28,7 @@ clean:
 	make -C circle/addon/fatfs clean
 	make -C circle/addon/linux clean
 	make -C circle/addon/SDCard clean
+	make -C circle/addon/nvme clean
 ifneq ($(strip $(RASPPI)),5)
 	cd circle/addon/vc4 && ./makeall --nosample clean
 endif

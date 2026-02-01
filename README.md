@@ -68,8 +68,10 @@ Now power on your Raspberry Pi and wait for the prompt. You can display a list o
 	Command                 Description                             Alias
 
 	runtest TEST            Run the given test                      run
-	status [cpu|mem|task]   Show CPU (default), memory, task status st
+	status [cpu|mem|task|net]
+	                        Show CPU, memory, net, task status      st
 	show [devs]             Show devices
+	dtb [check|dump]	Check [and dump] devicetree blob
 	setspeed low|max        Set CPU speed low or to maximum
 	task [susp|res] TASK    Suspend or resume task
 	ntp HOST [[-]MIN]       Set NTP server and time difference
@@ -88,7 +90,7 @@ Help about the different tests will be displayed with the command "help tests":
 
 	fractal         [MAXITERATION]          Display Mandelbrot image
 	files           PARTITION [COUNT]       Write and read files
-	fatfs           SD:|USB: [COUNT]        Write and read files using FatFs
+	fatfs           SD:|USB:|NVME: [COUNT]  Write and read files using FatFs
 	showmbr         DEVICE                  Show partitions from Master Boot Block
 	sound           DEVICE [LHZ [RHZ]]      Play tone on sndpwm, sndi2s, sndhdmi, sndusb or sndvchiq
 	iperf           [HOST]                  Run iperf2 server (default) or client

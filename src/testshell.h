@@ -39,6 +39,9 @@ private:
 	boolean RunTest (void);
 	boolean Status (void);
 	boolean Show (void);
+#if RASPPI >= 4
+	boolean DTB (void);
+#endif
 	boolean SetSpeed (void);
 	boolean Task (void);
 	boolean NTP (void);

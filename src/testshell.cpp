@@ -2,7 +2,7 @@
 // testshell.cpp
 //
 // Unitest - Universal test program for Circle
-// Copyright (C) 2021  R. Stange <rsta2@o2online.de>
+// Copyright (C) 2021-2025  R. Stange <rsta2gmx.net>
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 #include <circle/net/dnsclient.h>
 #include <circle/net/ntpdaemon.h>
 #include <circle/net/syslogdaemon.h>
+#include <circle/machineinfo.h>
 #include <circle/sysconfig.h>
 #include <circle/startup.h>
 #include <circle/multicore.h>
@@ -41,8 +42,12 @@ const char CTestShell::HelpMsg[] =
 	"Command\t\t\tDescription\t\t\t\tAlias\n"
 	"\n"
 	"runtest TEST\t\tRun the given test\t\t\trun\n"
-	"status [cpu|mem|task]\tShow CPU (default), memory, task status\tst\n"
+	"status [cpu|mem|net|task]\n"
+	"\t\t\tShow CPU, memory, net, task status\tst\n"
 	"show [devs]\t\tShow devices\n"
+#if RASPPI >= 4
+	"dtb [check|dump]\tCheck [and dump] devicetree blob\n"
+#endif
 	"setspeed low|max\tSet CPU speed low or to maximum\n"
 	"task [susp|res] TASK\tSuspend or resume task\n"
 	"ntp HOST [[-]MIN]\tSet NTP server and time difference\n"
@@ -112,6 +117,15 @@ void CTestShell::Run (void)
 					break;
 				}
 			}
+#if RASPPI >= 4
+			else if (Command.Compare ("dtb") == 0)
+			{
+				if (!DTB ())
+				{
+					break;
+				}
+			}
+#endif
 			else if (Command.Compare ("setspeed") == 0)
 			{
 				if (!SetSpeed ())
@@ -240,6 +254,13 @@ boolean CTestShell::Status (void)
 
 			return TRUE;
 		}
+		else if (Option.Compare ("net") == 0)
+		{
+			assert (m_pConsole != 0);
+			CNetSubSystem::Get ()->GetTransportLayer ()->ListConnections (m_pConsole);
+
+			return TRUE;
+		}
 		else
 		{
 			UnGetToken (Option);
@@ -270,6 +291,40 @@ boolean CTestShell::Show (void)
 
 	return TRUE;
 }
+
+#if RASPPI >= 4
+
+boolean CTestShell::DTB (void)
+{
+	boolean bDump = FALSE;
+
+	CString Option;
+	if (GetToken (&Option))
+	{
+		if (Option.Compare ("check") == 0)
+		{
+			// nothing to do
+		}
+		else if (Option.Compare ("dump") == 0)
+		{
+			bDump = TRUE;
+		}
+		else
+		{
+			UnGetToken (Option);
+		}
+	}
+
+	boolean bOK = CMachineInfo::Get ()->CheckDTB (bDump);
+	if (!bDump && bOK)
+	{
+		Print ("DTB successfully checked\n");
+	}
+
+	return bOK;
+}
+
+#endif
 
 boolean CTestShell::SetSpeed (void)
 {
